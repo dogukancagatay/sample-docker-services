@@ -1,0 +1,17 @@
+version: "3"
+services:
+
+  haproxy:
+    image: haproxy:2.1-alpine
+    container_name: ingress-haproxy
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+      - 8404:8404
+      - 80:80
+      - 443:443
+      - 5672:5672
+      - 15672:15672
+      - 6379:6379
+    restart: unless-stopped
+

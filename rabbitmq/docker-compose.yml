@@ -1,0 +1,22 @@
+version: "3"
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq01.home.local
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+      - "25672:25672"
+    volumes:
+      - ./data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "my-secret-cookie"
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+      RABBITMQ_USE_LONGNAME: "true"
+    restart: unless-stopped
