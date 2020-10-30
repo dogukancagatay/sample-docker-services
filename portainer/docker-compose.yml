@@ -1,0 +1,10 @@
+version: "3"
+services:
+  portainer:
+    image: portainer/portainer
+    command: -H unix:///var/run/docker.sock --no-auth --no-analytics
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped

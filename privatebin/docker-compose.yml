@@ -1,0 +1,23 @@
+version: "2"
+services:
+
+  mysql:
+    image: mysql:8
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "privatebin"
+      MYSQL_USER: "privatebin"
+      MYSQL_PASSWORD: "privatebin"
+
+  privatebin:
+    image: jgeusebroek/privatebin:latest
+    volumes:
+      - ./config:/privatebin/cfg
+      - ./data:/privatebin/data
+    ports:
+      - 8181:80
+    environment:
+      UID: "1000"
+      GID: "1000"
+    restart: unless-stopped

@@ -11,9 +11,10 @@ services:
       - "5000:5000"
     restart: unless-stopped
 
+# Docker NFS mount
 # volumes:
 #   registry_volume:
 #     driver_opts:
 #       type: "nfs"
-#       o: "addr=192.168.2.200,nolock,soft,rw"
+#       o: "addr=192.168.1.2,nolock,soft,rw"
 #       device: ":/disk1/docker-registry-mirror"
