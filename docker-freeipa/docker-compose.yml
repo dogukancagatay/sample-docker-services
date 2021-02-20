@@ -1,0 +1,47 @@
+version: "2.1"
+services:
+
+  freeipa:
+    image: freeipa/freeipa-server:fedora-33
+    hostname: ipa.myhost.local
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.10
+        ipv6_address: 2001:3984:3989::10
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./data:/data
+    environment:
+      IPA_SERVER_INSTALL_OPTS: "--unattended --realm=MYHOST.LOCAL --ds-password=admin123 --admin-password=admin123 --no-ntp --no-ssh --no-sshd --no-ui-redirect"
+    ports:
+       - 80:80
+       - 443:443
+       - 389:389
+       - 636:636
+      #  - "53:53/udp"
+      #  - "53:53"
+      #  - "88:88"
+      #  - "464:464"
+      #  - "88:88/udp"
+      #  - "464:464/udp"
+      #  - "123:123/udp"
+      #  - "7389:7389"
+      #  - "9443:9443"
+      #  - "9444:9444"
+      #  - "9445:9445"
+    # restart: unless-stopped
+
+networks:
+  app_net:
+    enable_ipv6: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.238.0/24
+        gateway: 172.16.238.1
+      - subnet: 2001:3984:3989::/64
+        gateway: 2001:3984:3989::1
