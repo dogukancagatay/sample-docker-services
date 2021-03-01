@@ -39,7 +39,7 @@ On your host machine add a record containing your FreeIPA *hostname* to your `/e
 
 ## Start Service
 
-On your first start, FreeIPA installation will be initialized and it will take a while to finish initialization. You can follow that on the logs. After that, you can go to the Web UI [](https://ipa.myhost.local/ipa/ui) and login with user `admin` and specified `--admin-password`.
+On your first start, FreeIPA installation will be initialized and it will take a while to finish initialization. You can follow the logs. After that, you can go to the Web UI [https://ipa.myhost.local/ipa/ui](https://ipa.myhost.local/ipa/ui) and login with user `admin` and specified `--admin-password`.
 
 ## Data Persistence
 
