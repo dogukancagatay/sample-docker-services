@@ -1,0 +1,12 @@
+version: '2'
+services:
+
+  app:
+    image: docker.io/niruix/sshwifty:latest
+    ports:
+      - 8182:8182
+    volumes:
+      - ./config:/config
+    environment:
+      SSHWIFTY_CONFIG: '/config/sshwifty.conf.json'
+    restart: unless-stopped
