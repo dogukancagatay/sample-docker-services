@@ -1,0 +1,20 @@
+version: "3"
+services:
+  app:
+    image: xataz/gobrowser
+    volumes:
+      - ./shared:/home
+    ports:
+      - 5000:5000
+    environment:
+      SHARE_PATH: "/"
+    #   UID: "${UID}"
+    #   GID: "${GID}"
+    restart: unless-stopped
+# Docker NFS mount
+# volumes:
+#   data_volume:
+#     driver_opts:
+#       type: "nfs"
+#       o: "addr=192.168.1.2,nolock,soft,rw"
+#       device: ":/disk1/data"
