@@ -1,0 +1,24 @@
+apiVersion: 1
+
+notifiers:
+#  - name: sysadmins-email-notifier
+#    type: email
+#    org_id: 1
+#    uid: sysadmins-email-notifier
+#    is_default: false
+#    settings:
+#      addresses: email@example.local
+#   - name: default-slack-temp
+#     type: slack
+#     org_name: Main Org.
+#     is_default: true
+#     uid: notifier1
+#     settings:
+#       recipient: "XXX"
+#       token: "xoxb"
+#       uploadImage: true
+#       url: https://slack.com
+# delete_notifiers:
+#   - name: default-slack-temp
+#     org_name: Main Org.
+#     uid: notifier1

@@ -1,0 +1,43 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+
+rule_files:
+  - "alert.rules"
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "alertmanager-svc:9093"
+
+scrape_configs:
+
+- job_name: node_watch
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  metrics_path: /metrics
+  static_configs:
+  - targets:
+    - node-exporter:9100
+    labels:
+      group: "node-exporter"
+
+- job_name: container_watch
+  scrape_interval: 30s
+  scrape_timeout: 10s
+  metrics_path: /metrics
+  static_configs:
+  - targets:
+    - cadvisor:8282
+    labels:
+      group: "cadvisor"
+
+# - job_name: pushgateway
+#   honor_labels: true
+#   static_configs:
+#   - targets: ["pushgateway-svc:9091"]
+#     labels:
+#       group: "pushgateway"

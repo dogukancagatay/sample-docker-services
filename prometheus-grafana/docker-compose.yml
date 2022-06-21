@@ -1,0 +1,114 @@
+version: "3"
+services:
+  prometheus:
+    image: prom/prometheus:v2.25.0
+    container_name: prometheus
+    networks:
+      default:
+        aliases:
+          - prometheus-svc
+    volumes:
+      - ./config/prometheus/:/etc/prometheus/
+    #   - ./data/prometheus:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:7.4.3
+    container_name: grafana
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+      # - ./data/grafana:/var/lib/grafana
+    ports:
+      - 3000:3000
+    environment:
+      GF_SECURITY_ADMIN_USER: "admin"
+      GF_SECURITY_ADMIN_PASSWORD: "admin123"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      # GF_AUTH_DISABLE_LOGIN_FORM: "false"
+      # GF_AUTH_ANONYMOUS_ENABLED: "true"
+      # GF_AUTH_BASIC_ENABLED: "true"
+      # GF_AUTH_ANONYMOUS_ORG_NAME: "Main Org."
+      # GF_AUTH_ANONYMOUS_ORG_ROLE: "Editor" #Viewer
+      # # GF_AUTH_DISABLE_SIGNOUT_MENU: "true"
+      # GF_SMTP_ENABLED: "true"
+      # GF_SMTP_HOST: "192.168.1.40:9025"
+      # GF_SMTP_FROM_ADDRESS: "grafana-no-reply@dgkncgty.com"
+      # GF_SMTP_FROM_NAME: "Grafana"
+      # GF_SMTP_STARTTLS_POLICY: "NoStartTLS"
+      # GF_SECURITY_ALLOW_EMBEDDING: "true"
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel,snuids-trafficlights-panel"
+    restart: unless-stopped
+
+  alertmanager:
+    image: prom/alertmanager:v0.21.0
+    container_name: alertmanager
+    networks:
+      default:
+        aliases:
+          - alertmanager-svc
+    volumes:
+      - ./config/alertmanager:/etc/alertmanager
+      # - ./data/alertmanager:/alertmanager
+    ports:
+      - 9093:9093
+    restart: unless-stopped
+
+  # pushgateway:
+  #   image: prom/pushgateway:v1.2.0
+  #   container_name: pushgateway
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - pushgateway-svc
+  #   volumes:
+  #     - ./data/pushgateway:/pushgateway
+  #   ports:
+  #     - 9091:9091
+  #   restart: unless-stopped
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadviser
+    hostname: my-computer.example.local
+    privileged: true
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/cgroup:/cgroup:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+    ports:
+      - 8282:8080
+    restart: unless-stopped
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    hostname: my-computer.example.local
+    user: root
+    privileged: true
+    ports:
+      - 9100:9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--collector.ntp"
+      - "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)"
+    restart: unless-stopped
+
+networks:
+  default:
