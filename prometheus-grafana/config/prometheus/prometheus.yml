@@ -1,43 +1,36 @@
 global:
-  scrape_interval: 15s
-  scrape_timeout: 10s
-  evaluation_interval: 15s
+  scrape_interval: 15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 1m
+  external_labels:
+    monitor: "my-project"
 
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
 rule_files:
   - "alert.rules"
 
+# Alertmanager
 alerting:
   alertmanagers:
-  - scheme: http
-    static_configs:
-    - targets:
-      - "alertmanager-svc:9093"
+    - scheme: http
+      static_configs:
+        - targets:
+            - "alertmanager:9093"
 
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
 scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
 
-- job_name: node_watch
-  scrape_interval: 15s
-  scrape_timeout: 10s
-  metrics_path: /metrics
-  static_configs:
-  - targets:
-    - node-exporter:9100
-    labels:
-      group: "node-exporter"
+  - job_name: "cadvisor"
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - cadvisor:8080
 
-- job_name: container_watch
-  scrape_interval: 30s
-  scrape_timeout: 10s
-  metrics_path: /metrics
-  static_configs:
-  - targets:
-    - cadvisor:8282
-    labels:
-      group: "cadvisor"
-
-# - job_name: pushgateway
-#   honor_labels: true
-#   static_configs:
-#   - targets: ["pushgateway-svc:9091"]
-#     labels:
-#       group: "pushgateway"
+  - job_name: node
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - node-exporter:9100

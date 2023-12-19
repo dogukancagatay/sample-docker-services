@@ -1,42 +1,40 @@
 groups:
-
-- name: targets
+- name: example
   rules:
-  - alert: monitor_service_down
+
+  # Alert for any instance that is unreachable for >2 minutes.
+  - alert: service_down
     expr: up == 0
-    for: 30s
+    for: 2m
     labels:
-      severity: critical
+      severity: page
     annotations:
-      summary: "Service/Node is non-operational"
-      description: "Service/Node {{ $labels.instance }} is down."
+      summary: "Instance {{ $labels.instance }} down"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 2 minutes."
 
-- name: node_exporter
-  rules:
-
-  - alert: high_cpu_load
-    expr: node_load15 > (count(node_cpu_seconds_total{mode="idle"}) by (instance) * 0.7)
-    for: 30s
+  - alert: high_load
+    expr: node_load1 > 0.5
+    for: 2m
     labels:
-      severity: warning
+      severity: page
     annotations:
-      summary: "Server under high load"
-      description: "Host is under high load, the avg load 15m is at {{ $value }}. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+      summary: "Instance {{ $labels.instance }} under high load"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} is under high load."
 
-  - alert: high_memory_load
-    expr: (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes) ) / node_memory_MemTotal_bytes * 100 > 90
-    for: 2h
+  - alert: high_disk_usage
+    expr: 100 - (100 * node_filesystem_avail_bytes{device!~'rootfs'} / node_filesystem_size_bytes{device!~'rootfs'}) > 90
+    for: 2m
     labels:
-      severity: warning
+      severity: high
     annotations:
-      summary: "Server memory is almost full"
-      description: "Host memory usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+      summary: "High disk usage (>90%) on instance {{ $labels.instance }}"
+      description: "Available disk space is <= 10% on instance {{ $labels.instance }}.  Disk usage: {{ $value }}%\n  Labels: {{ $labels }}"
 
-  - alert: high_rootfs_usage
-    expr: (node_filesystem_size_bytes{fstype="rootfs"} - node_filesystem_free_bytes{fstype="rootfs"}) / node_filesystem_size_bytes{fstype="rootfs"}  * 100 > 85
-    for: 2h
+  - alert: medium_disk_usage
+    expr: 100 - (100 * node_filesystem_avail_bytes{device!~'rootfs'} / node_filesystem_size_bytes{device!~'rootfs'}) > 50
+    for: 2m
     labels:
-      severity: warning
+      severity: low
     annotations:
-      summary: "Server storage is almost full"
-      description: "Host storage usage is {{ humanize $value }}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+      summary: "High disk usage (>50%) on instance {{ $labels.instance }}"
+      description: "Available disk space is <= 50% on instance {{ $labels.instance }}.  Disk usage: {{ $value }}%\n  Labels: {{ $labels }}"

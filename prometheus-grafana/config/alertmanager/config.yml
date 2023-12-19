@@ -1,0 +1,20 @@
+# Configuration Docs:
+# https://prometheus.io/docs/alerting/latest/configuration/
+
+global:
+  # smtp_smarthost: "smtp.example.com:25"
+  # smtp_from: "alertmanager-noreply@example.com"
+  # smtp_require_tls: false
+  # smtp_auth_username: "alertmanager"
+  # smtp_auth_password: "password"
+  http_config:
+    tls_config:
+      insecure_skip_verify: true
+
+route:
+  receiver: "team-X-mails"
+
+receivers:
+  - name: "team-X-mails"
+    # email_configs:
+    #   - to: 'team-X+alerts@example.org'
