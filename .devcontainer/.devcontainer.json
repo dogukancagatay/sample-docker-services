@@ -1,0 +1,25 @@
+{
+    // "image":"mcr.microsoft.com/devcontainers/base:ubuntu",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "christian-kohler.path-intellisense",
+                "eamodio.gitlens",
+                "esbenp.prettier-vscode",
+                "foxundermoon.shell-format",
+                "GitHub.vscode-pull-request-github",
+                "ms-azuretools.vscode-docker",
+                "ms-python.python",
+                "ms-vscode.makefile-tools",
+                "redhat.ansible",
+                "redhat.vscode-xml",
+                "redhat.vscode-yaml",
+                "wholroyd.jinja"
+            ]
+        }
+    },
+
+}
